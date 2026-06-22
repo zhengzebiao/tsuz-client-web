@@ -3,873 +3,1086 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MFE UI Design Draft</title>
+  <title>MFE UI Design Draft - Minimal</title>
   <style>
     :root {
-      --ink: #0f1b2d;
-      --ink-2: #1d2e49;
-      --paper: #f7f2e8;
-      --paper-2: #fffaf0;
-      --mist: #dfe8e4;
-      --line: rgba(15, 27, 45, .14);
-      --muted: #6f7b87;
-      --cyan: #20d6bd;
-      --gold: #d8a944;
-      --red: #e45454;
-      --green: #36b37e;
-      --shadow: 0 28px 70px rgba(15, 27, 45, .18);
-      --shadow-soft: 0 16px 38px rgba(15, 27, 45, .12);
-      --radius-lg: 30px;
-      --radius-md: 20px;
-      --radius-sm: 14px;
-      --ease: cubic-bezier(.16, 1, .3, 1);
-      font-family: ui-serif, "Songti SC", "STSong", "Noto Serif CJK SC", Georgia, serif;
+      --primary: #1677ff;
+      --primary-weak: #eaf3ff;
+      --primary-soft: #f3f8ff;
+      --text: #1f2329;
+      --text-2: #4e5969;
+      --text-3: #86909c;
+      --line: #e5e6eb;
+      --line-2: #f0f2f5;
+      --bg: #f5f7fb;
+      --white: #ffffff;
+      --success: #00b578;
+      --warning: #ff9a2e;
+      --danger: #f53f3f;
+      --radius: 10px;
+      --shadow: 0 8px 24px rgba(31, 35, 41, .06);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     }
 
     * { box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 16% 8%, rgba(32, 214, 189, .22), transparent 28%),
-        radial-gradient(circle at 88% 12%, rgba(216, 169, 68, .18), transparent 28%),
-        linear-gradient(135deg, #f4efe5 0%, #e8eee9 54%, #f9f4e8 100%);
       min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: .24;
-      background-image:
-        linear-gradient(rgba(15, 27, 45, .05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15, 27, 45, .05) 1px, transparent 1px);
-      background-size: 36px 36px;
-      mask-image: radial-gradient(circle at 50% 20%, #000 0%, transparent 78%);
-      z-index: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 14px;
     }
 
     button, input { font: inherit; }
 
-    .canvas {
-      position: relative;
-      z-index: 1;
-      width: min(1480px, calc(100vw - 32px));
-      margin: 16px auto 40px;
-    }
-
-    .artboard {
+    .app {
+      min-height: 100vh;
       display: grid;
-      grid-template-columns: 268px 1fr;
-      min-height: calc(100vh - 32px);
-      border: 1px solid rgba(255, 255, 255, .5);
-      border-radius: 38px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      background: rgba(255, 250, 240, .58);
-      backdrop-filter: blur(20px);
-      animation: rise .8s var(--ease) both;
+      grid-template-rows: 68px 1fr;
     }
 
-    @keyframes rise {
-      from { transform: translateY(18px) scale(.985); opacity: 0; }
-      to { transform: translateY(0) scale(1); opacity: 1; }
-    }
-
-    .side {
-      position: relative;
-      color: #eaf7f3;
-      background:
-        linear-gradient(180deg, rgba(15, 27, 45, .98), rgba(18, 36, 57, .97)),
-        radial-gradient(circle at 40% 0%, rgba(32, 214, 189, .3), transparent 36%);
-      padding: 28px 18px;
-      overflow: hidden;
-    }
-
-    .side::after {
-      content: "MFE";
-      position: absolute;
-      left: -20px;
-      bottom: 40px;
-      font: 900 92px/1 ui-sans-serif, system-ui;
-      letter-spacing: -8px;
-      color: rgba(255, 255, 255, .035);
-      transform: rotate(-90deg);
-      transform-origin: left bottom;
+    .topbar {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, .02);
+      z-index: 5;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 0 10px 28px;
+      min-width: 260px;
     }
 
-    .mark {
-      width: 46px;
-      height: 46px;
-      border-radius: 17px;
-      display: grid;
-      place-items: center;
-      color: var(--ink);
-      font: 900 18px/1 ui-sans-serif, system-ui;
-      background: conic-gradient(from 160deg, var(--cyan), #f6df96, #ffffff, var(--cyan));
-      box-shadow: 0 0 36px rgba(32, 214, 189, .25);
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: .08em;
-    }
-
-    .brand p {
-      margin: 4px 0 0;
-      font-size: 12px;
-      color: rgba(234, 247, 243, .58);
-      font-family: ui-sans-serif, "PingFang SC", sans-serif;
-    }
-
-    .nav-label {
-      margin: 14px 10px 10px;
-      font: 700 11px/1 ui-sans-serif, "PingFang SC", sans-serif;
-      color: rgba(234, 247, 243, .42);
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
-
-    .nav {
-      display: grid;
-      gap: 8px;
-    }
-
-    .nav button {
-      border: 0;
-      width: 100%;
-      color: rgba(234, 247, 243, .76);
-      background: transparent;
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 13px;
-      cursor: pointer;
-      transition: .28s var(--ease);
-      text-align: left;
-      font-family: ui-sans-serif, "PingFang SC", sans-serif;
-    }
-
-    .nav button:hover,
-    .nav button.active {
-      color: #ffffff;
-      background: rgba(255, 255, 255, .1);
-      transform: translateX(4px);
-    }
-
-    .nav button.active {
-      box-shadow: inset 3px 0 0 var(--cyan), 0 10px 24px rgba(0, 0, 0, .14);
-    }
-
-    .icon {
+    .logo {
       width: 34px;
       height: 34px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, .1);
-      font-size: 16px;
-    }
-
-    .side-card {
+      border-radius: 9px;
+      background: linear-gradient(135deg, #1d7cff, #52a7ff);
       position: relative;
-      margin: 28px 6px 0;
-      padding: 18px;
-      border-radius: 22px;
-      background: linear-gradient(145deg, rgba(32, 214, 189, .18), rgba(255, 255, 255, .08));
-      border: 1px solid rgba(255, 255, 255, .14);
-      font-family: ui-sans-serif, "PingFang SC", sans-serif;
     }
 
-    .side-card b { display: block; font-size: 14px; }
-    .side-card span { display: block; margin-top: 8px; color: rgba(234, 247, 243, .66); font-size: 12px; line-height: 1.6; }
-
-    .main {
-      min-width: 0;
-      padding: 24px;
-      background:
-        linear-gradient(180deg, rgba(255, 250, 240, .82), rgba(247, 242, 232, .88)),
-        radial-gradient(circle at 78% 14%, rgba(32, 214, 189, .2), transparent 30%);
+    .logo::after {
+      content: "";
+      position: absolute;
+      right: -4px;
+      bottom: 5px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 3px solid #1d7cff;
     }
 
-    .topbar {
-      height: 72px;
+    .brand strong {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+
+    .topnav {
+      display: flex;
+      align-items: stretch;
+      align-self: stretch;
+      gap: 18px;
+    }
+
+    .topnav button {
+      position: relative;
+      border: 0;
+      background: transparent;
+      padding: 0 18px;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .topnav button.active {
+      color: var(--primary);
+    }
+
+    .topnav button.active::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 0;
+      height: 3px;
+      border-radius: 3px 3px 0 0;
+      background: var(--primary);
+    }
+
+    .userbar {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 0 6px 18px;
+      gap: 22px;
+      min-width: 260px;
+      justify-content: flex-end;
     }
 
-    .search {
-      flex: 1;
-      max-width: 560px;
+    .bell {
+      width: 22px;
+      height: 22px;
+      color: var(--text-2);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+    }
+
+    .user {
       display: flex;
       align-items: center;
       gap: 10px;
-      height: 48px;
-      padding: 0 16px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, .58);
-      border: 1px solid var(--line);
-      box-shadow: 0 8px 24px rgba(15, 27, 45, .06);
-      color: var(--muted);
-      font-family: ui-sans-serif, "PingFang SC", sans-serif;
-    }
-
-    .search input {
-      width: 100%;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      color: var(--ink);
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 42px;
-      padding: 0 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .62);
-      border: 1px solid var(--line);
-      font-family: ui-sans-serif, "PingFang SC", sans-serif;
-      color: var(--ink-2);
-      box-shadow: 0 8px 22px rgba(15, 27, 45, .06);
+      font-weight: 600;
     }
 
     .avatar {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--ink), var(--cyan));
-      display: inline-grid;
+      display: grid;
       place-items: center;
-      color: white;
-      font: 800 12px/1 ui-sans-serif;
+      color: var(--white);
+      background: var(--primary);
+      font-weight: 700;
     }
 
-    .view { display: none; animation: appear .55s var(--ease) both; }
+    .body {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 206px 1fr;
+    }
+
+    .sidebar {
+      background: var(--white);
+      border-right: 1px solid var(--line);
+      padding: 24px 12px;
+    }
+
+    .side-title {
+      margin: 0 12px 18px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .side-menu {
+      display: grid;
+      gap: 8px;
+    }
+
+    .side-menu button {
+      border: 0;
+      width: 100%;
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 13px;
+      border-radius: 8px;
+      color: var(--text-2);
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .side-menu button:hover {
+      background: #f7f8fa;
+    }
+
+    .side-menu button.active {
+      color: var(--primary);
+      background: var(--primary-weak);
+    }
+
+    .side-icon {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 19px;
+    }
+
+    .content {
+      min-width: 0;
+      padding: 16px;
+    }
+
+    .view { display: none; }
     .view.active { display: block; }
 
-    @keyframes appear {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero {
+    .home-layout {
       display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 22px;
-      margin-bottom: 22px;
-    }
-
-    .panel {
-      border: 1px solid rgba(15, 27, 45, .12);
-      border-radius: var(--radius-lg);
-      background: rgba(255, 250, 240, .78);
-      box-shadow: var(--shadow-soft);
-      overflow: hidden;
-    }
-
-    .hero-main {
-      min-height: 330px;
-      position: relative;
-      padding: 34px;
-      background:
-        linear-gradient(135deg, rgba(15, 27, 45, .96), rgba(19, 49, 70, .92)),
-        radial-gradient(circle at 70% 0%, rgba(32, 214, 189, .44), transparent 34%);
-      color: #fff;
-    }
-
-    .hero-main::after {
-      content: "";
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      right: -34px;
-      bottom: -62px;
-      border-radius: 60px;
-      border: 1px solid rgba(255, 255, 255, .2);
-      transform: rotate(18deg);
-      background: linear-gradient(135deg, rgba(255, 255, 255, .12), rgba(32, 214, 189, .06));
-    }
-
-    .eyebrow {
-      display: inline-flex;
+      grid-template-columns: 340px 1fr;
       gap: 8px;
-      align-items: center;
-      color: rgba(255,255,255,.72);
-      font: 700 12px/1 ui-sans-serif, "PingFang SC", sans-serif;
-      letter-spacing: .14em;
-      text-transform: uppercase;
+      min-height: calc(100vh - 100px);
     }
-
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 18px var(--cyan); }
-
-    .hero-main h2 {
-      position: relative;
-      z-index: 1;
-      margin: 30px 0 16px;
-      font-size: clamp(38px, 5vw, 76px);
-      line-height: .92;
-      letter-spacing: -.07em;
-      max-width: 650px;
-    }
-
-    .hero-main p {
-      position: relative;
-      z-index: 1;
-      margin: 0;
-      max-width: 560px;
-      color: rgba(255,255,255,.72);
-      font: 15px/1.8 ui-sans-serif, "PingFang SC", sans-serif;
-    }
-
-    .hero-actions {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      gap: 12px;
-      margin-top: 28px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: 0;
-      min-height: 46px;
-      padding: 0 18px;
-      border-radius: 999px;
-      cursor: pointer;
-      font: 800 14px/1 ui-sans-serif, "PingFang SC", sans-serif;
-      transition: .25s var(--ease);
-    }
-
-    .btn:hover { transform: translateY(-2px); }
-    .btn-primary { background: var(--cyan); color: var(--ink); box-shadow: 0 14px 30px rgba(32, 214, 189, .28); }
-    .btn-dark { background: var(--ink); color: #fff; }
-    .btn-ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.18); }
-    .btn-line { background: transparent; color: var(--ink); border: 1px solid var(--line); }
-    .btn-danger { background: rgba(228, 84, 84, .1); color: var(--red); border: 1px solid rgba(228, 84, 84, .2); }
-
-    .stat-stack {
-      display: grid;
-      gap: 16px;
-    }
-
-    .metric {
-      padding: 24px;
-      border-radius: var(--radius-md);
-      background: rgba(255,255,255,.62);
-      border: 1px solid var(--line);
-      box-shadow: 0 10px 28px rgba(15, 27, 45, .07);
-    }
-
-    .metric small { color: var(--muted); font: 700 12px/1 ui-sans-serif; letter-spacing: .08em; }
-    .metric strong { display: block; margin-top: 12px; font: 900 38px/.9 ui-sans-serif, system-ui; letter-spacing: -.05em; }
-    .metric span { display: block; margin-top: 8px; color: var(--green); font: 700 13px/1 ui-sans-serif; }
-
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
 
     .card {
-      padding: 24px;
-      border-radius: var(--radius-md);
-      background: rgba(255, 250, 240, .75);
-      border: 1px solid var(--line);
-      box-shadow: 0 12px 30px rgba(15, 27, 45, .07);
+      background: var(--white);
+      border: 1px solid var(--line-2);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 2px rgba(31, 35, 41, .02);
     }
 
-    .card h3, .card h4 { margin: 0; }
-    .card h3 { font-size: 24px; letter-spacing: -.04em; }
-    .card h4 { font-size: 18px; letter-spacing: -.02em; }
-    .card p { color: var(--muted); font: 14px/1.7 ui-sans-serif, "PingFang SC", sans-serif; margin: 10px 0 0; }
+    .conversation-list {
+      padding: 22px;
+    }
 
-    .app-tile {
-      position: relative;
-      overflow: hidden;
-      min-height: 170px;
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .card-head h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .icon-btn {
+      border: 0;
+      background: transparent;
+      color: var(--text-2);
       cursor: pointer;
-      transition: .28s var(--ease);
+      font-size: 18px;
     }
 
-    .app-tile:hover { transform: translateY(-5px) rotate(-.6deg); box-shadow: 0 22px 46px rgba(15, 27, 45, .14); }
+    .outline-btn {
+      width: 100%;
+      height: 42px;
+      border-radius: 6px;
+      border: 1px solid #8ab9ff;
+      background: var(--white);
+      color: var(--primary);
+      cursor: pointer;
+      font-weight: 600;
+    }
 
-    .tile-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 16px;
+    .chat-item {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--line-2);
+    }
+
+    .chat-item.active {
+      background: var(--primary-weak);
+      border-bottom-color: transparent;
+    }
+
+    .chat-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text);
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .chat-title strong {
+      color: var(--primary);
+    }
+
+    .chat-time {
+      color: var(--text-3);
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .chat-desc {
+      margin-top: 8px;
+      color: var(--text-3);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 13px;
+    }
+
+    .more-link {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .work-panel {
+      display: grid;
+      grid-template-rows: 70px 1fr auto;
+      min-height: calc(100vh - 100px);
+      overflow: hidden;
+    }
+
+    .work-title {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--line-2);
+    }
+
+    .work-title h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .small-btn {
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--text-2);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .workspace {
+      padding: 28px 24px 18px;
+      overflow: auto;
+    }
+
+    .user-bubble {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .bubble {
+      max-width: 420px;
+      padding: 14px 18px;
+      border-radius: 8px 2px 8px 8px;
+      background: var(--primary-weak);
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .bubble-time {
+      margin-top: 8px;
+      color: var(--text-3);
+      text-align: right;
+      font-size: 12px;
+    }
+
+    .answer {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 760px);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .bot-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
       display: grid;
       place-items: center;
-      background: var(--ink);
-      color: #fff;
-      margin-bottom: 22px;
+      background: var(--primary);
+      color: var(--white);
+      font-size: 20px;
     }
 
-    .app-tile::after {
-      content: "";
-      position: absolute;
-      right: -22px;
-      bottom: -26px;
-      width: 120px;
-      height: 120px;
-      border-radius: 36px;
-      background: rgba(32, 214, 189, .15);
-      transform: rotate(20deg);
-    }
-
-    .section-title {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      margin: 26px 4px 14px;
-    }
-
-    .section-title h3 { margin: 0; font-size: 26px; letter-spacing: -.04em; }
-    .section-title span { color: var(--muted); font: 13px/1 ui-sans-serif; }
-
-    .login-wrap {
-      display: grid;
-      grid-template-columns: .92fr 1.08fr;
-      min-height: 680px;
-      border-radius: 34px;
-      overflow: hidden;
-      box-shadow: var(--shadow-soft);
+    .answer-card {
+      padding: 22px;
       border: 1px solid var(--line);
-      background: rgba(255,250,240,.78);
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--text);
+      line-height: 1.9;
     }
 
-    .login-art {
-      position: relative;
-      padding: 42px;
-      background:
-        linear-gradient(150deg, rgba(15,27,45,.98), rgba(25,58,75,.94)),
-        radial-gradient(circle at 80% 18%, rgba(32,214,189,.32), transparent 36%);
-      color: #fff;
+    .answer-card p { margin: 0 0 12px; }
+    .answer-card ol { margin: 0 0 18px; padding-left: 20px; }
+    .answer-card li { margin: 7px 0; }
+
+    .docs {
+      margin-top: 18px;
+      padding: 14px;
+      border: 1px solid var(--line-2);
+      border-radius: 8px;
+    }
+
+    .docs-title {
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .doc-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .doc {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line-2);
+      border-radius: 6px;
+      min-width: 0;
+    }
+
+    .doc-icon {
+      width: 34px;
+      height: 40px;
+      border-radius: 4px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    .doc-icon.word { background: #2f7cf6; }
+    .doc-icon.pdf { background: #f53f3f; }
+    .doc-icon.xls { background: #23c06b; }
+
+    .doc-info { min-width: 0; }
+    .doc-name { font-size: 12px; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .doc-meta { margin-top: 4px; color: var(--text-3); font-size: 11px; white-space: nowrap; }
+
+    .suggestions {
+      margin: 22px 56px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border: 1px solid var(--line-2);
+      border-radius: 8px;
+    }
+
+    .suggestions b {
+      white-space: nowrap;
+    }
+
+    .suggestions button {
+      height: 28px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: var(--white);
+      color: var(--text-2);
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .composer {
+      margin: 0 24px 22px;
+      border: 1.5px solid var(--primary);
+      border-radius: 8px;
+      background: var(--white);
+      min-height: 88px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      padding: 14px;
+    }
+
+    .composer input {
+      border: 0;
+      outline: 0;
+      align-self: start;
+      padding: 4px 0;
+      color: var(--text);
+    }
+
+    .composer-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-3);
+    }
+
+    .send {
+      height: 40px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--primary);
+      color: var(--white);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .page-panel {
+      max-width: 1180px;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--line-2);
+      border-radius: 10px;
       overflow: hidden;
     }
 
-    .login-art::before {
-      content: "";
-      position: absolute;
-      width: 380px;
-      height: 380px;
-      right: -110px;
-      bottom: -120px;
-      border-radius: 90px;
-      background: linear-gradient(135deg, rgba(32,214,189,.28), rgba(216,169,68,.18));
-      transform: rotate(22deg);
-      border: 1px solid rgba(255,255,255,.16);
+    .page-header {
+      padding: 22px 28px;
+      border-bottom: 1px solid var(--line-2);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
     }
 
-    .login-art h2 {
-      margin: 120px 0 18px;
-      position: relative;
-      z-index: 1;
-      font-size: 56px;
-      line-height: .95;
-      letter-spacing: -.07em;
+    .page-header h1 {
+      margin: 0;
+      font-size: 22px;
     }
 
-    .login-art p {
-      position: relative;
-      z-index: 1;
-      color: rgba(255,255,255,.7);
-      font: 15px/1.9 ui-sans-serif, "PingFang SC", sans-serif;
-      max-width: 420px;
+    .page-header p {
+      margin: 8px 0 0;
+      color: var(--text-3);
     }
 
-    .login-panel {
-      padding: 52px;
+    .login-page {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      min-height: 660px;
+      background: linear-gradient(135deg, #f7fbff, #fff);
+    }
+
+    .login-hero {
+      padding: 72px;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
 
-    .login-panel h2 { margin: 0; font-size: 38px; letter-spacing: -.05em; }
-    .login-panel > p { margin: 12px 0 28px; color: var(--muted); font: 14px/1.8 ui-sans-serif; }
+    .login-hero h2 {
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.2;
+    }
+
+    .login-hero p {
+      max-width: 520px;
+      color: var(--text-2);
+      line-height: 1.9;
+      margin-top: 18px;
+    }
+
+    .feature-list {
+      margin-top: 34px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .feature {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      color: var(--text-2);
+    }
+
+    .check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--primary-weak);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .login-card {
+      margin: 54px 54px 54px 0;
+      padding: 34px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      align-self: center;
+    }
+
+    .login-card h2 { margin: 0; font-size: 24px; }
+    .login-card p { margin: 10px 0 24px; color: var(--text-3); }
 
     .tabs {
-      display: flex;
-      padding: 5px;
-      gap: 4px;
-      border-radius: 999px;
-      background: rgba(15,27,45,.07);
-      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 22px;
     }
 
     .tabs button {
-      flex: 1;
-      border: 0;
       height: 42px;
-      border-radius: 999px;
-      cursor: pointer;
+      border: 0;
       background: transparent;
-      color: var(--muted);
-      font: 800 13px/1 ui-sans-serif, "PingFang SC";
+      color: var(--text-2);
+      cursor: pointer;
+      font-weight: 600;
+      position: relative;
     }
 
-    .tabs button.active { background: var(--paper-2); color: var(--ink); box-shadow: 0 8px 20px rgba(15,27,45,.1); }
+    .tabs button.active {
+      color: var(--primary);
+    }
 
-    .login-form { display: none; animation: appear .32s var(--ease) both; }
+    .tabs button.active::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: -1px;
+      height: 2px;
+      background: var(--primary);
+    }
+
+    .login-form { display: none; }
     .login-form.active { display: grid; gap: 14px; }
 
     .field {
-      position: relative;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      min-height: 54px;
-      padding: 0 16px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.7);
+      padding: 0 12px;
+      background: var(--white);
     }
 
     .field input {
-      flex: 1;
       border: 0;
       outline: 0;
-      background: transparent;
-      color: var(--ink);
+      width: 100%;
+      color: var(--text);
     }
 
-    .send-code {
+    .code-btn {
       border: 0;
-      color: var(--ink);
-      background: rgba(32,214,189,.16);
-      padding: 9px 12px;
-      border-radius: 999px;
+      background: transparent;
+      color: var(--primary);
       cursor: pointer;
-      font: 800 12px/1 ui-sans-serif;
+      white-space: nowrap;
+      font-weight: 600;
     }
+
+    .primary-btn {
+      height: 44px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--primary);
+      color: var(--white);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .secondary-btn {
+      height: 36px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--white);
+      color: var(--text-2);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .agreement {
+      color: var(--text-3);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .agreement a { color: var(--primary); text-decoration: none; }
 
     .qr {
-      height: 232px;
+      height: 200px;
       display: grid;
       place-items: center;
-      border-radius: 24px;
-      background:
-        linear-gradient(45deg, rgba(15,27,45,.08) 25%, transparent 25% 75%, rgba(15,27,45,.08) 75%),
-        linear-gradient(45deg, rgba(15,27,45,.08) 25%, transparent 25% 75%, rgba(15,27,45,.08) 75%);
-      background-size: 24px 24px;
-      background-position: 0 0, 12px 12px;
-      border: 1px solid var(--line);
+      border: 1px dashed #9ec5ff;
+      border-radius: 8px;
+      background: var(--primary-soft);
     }
 
     .qr-box {
-      width: 152px;
-      height: 152px;
-      border: 10px solid white;
-      border-radius: 22px;
+      width: 128px;
+      height: 128px;
+      border: 8px solid var(--white);
+      border-radius: 8px;
       background:
-        linear-gradient(90deg, var(--ink) 12px, transparent 12px) 0 0/32px 32px,
-        linear-gradient(var(--ink) 12px, transparent 12px) 0 0/32px 32px,
-        var(--cyan);
-      box-shadow: 0 16px 40px rgba(15,27,45,.2);
+        linear-gradient(90deg, #111 10px, transparent 10px) 0 0/26px 26px,
+        linear-gradient(#111 10px, transparent 10px) 0 0/26px 26px,
+        #dfefff;
+      box-shadow: 0 8px 20px rgba(31, 35, 41, .12);
     }
 
-    .agreement { color: var(--muted); font: 12px/1.7 ui-sans-serif; }
-    .agreement a { color: var(--ink); font-weight: 800; text-decoration: none; }
-
-    .profile-layout {
+    .profile-content {
+      padding: 24px;
       display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 20px;
+      gap: 16px;
+    }
+
+    .profile-top {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
     }
 
     .profile-card {
-      min-height: 520px;
-      padding: 28px;
-      color: white;
-      background:
-        linear-gradient(180deg, rgba(15,27,45,.98), rgba(25,58,75,.95)),
-        radial-gradient(circle at 50% 0%, rgba(32,214,189,.3), transparent 42%);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-soft);
+      padding: 24px;
+    }
+
+    .profile-main {
+      display: flex;
+      gap: 18px;
+      align-items: center;
     }
 
     .big-avatar {
-      width: 96px;
-      height: 96px;
-      border-radius: 34px;
-      background: conic-gradient(from 210deg, #fff, var(--cyan), var(--gold), #fff);
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
       display: grid;
       place-items: center;
-      color: var(--ink);
-      font: 900 30px/1 ui-sans-serif;
-      margin-bottom: 24px;
+      background: var(--primary);
+      color: var(--white);
+      font-size: 24px;
+      font-weight: 700;
     }
 
-    .profile-card h2 { margin: 0; font-size: 34px; letter-spacing: -.06em; }
-    .profile-card p { color: rgba(255,255,255,.68); font: 14px/1.8 ui-sans-serif; }
+    .profile-main h2 { margin: 0; font-size: 22px; }
+    .profile-main p { margin: 8px 0 0; color: var(--text-3); }
 
-    .identity-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(255,255,255,.12);
-      font-family: ui-sans-serif, "PingFang SC";
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 22px;
     }
 
-    .identity-row span { color: rgba(255,255,255,.58); font-size: 12px; }
-    .identity-row b { font-size: 14px; }
+    .info {
+      padding: 14px;
+      background: #fafbfc;
+      border: 1px solid var(--line-2);
+      border-radius: 8px;
+    }
 
-    .settings-grid { display: grid; gap: 18px; }
+    .info span { display: block; color: var(--text-3); font-size: 12px; }
+    .info b { display: block; margin-top: 8px; }
 
-    .setting-item {
+    .setting-list {
+      display: grid;
+    }
+
+    .setting {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       gap: 20px;
       padding: 18px 0;
-      border-bottom: 1px solid var(--line);
-      font-family: ui-sans-serif, "PingFang SC";
+      border-bottom: 1px solid var(--line-2);
     }
 
-    .setting-item:last-child { border-bottom: 0; }
-    .setting-item b { display: block; font-size: 15px; }
-    .setting-item span { display: block; margin-top: 5px; color: var(--muted); font-size: 12px; }
+    .setting:last-child { border-bottom: 0; }
+    .setting b { display: block; }
+    .setting span { display: block; margin-top: 6px; color: var(--text-3); font-size: 13px; }
 
-    .switch {
-      width: 48px;
-      height: 28px;
+    .tag {
+      display: inline-flex;
+      height: 24px;
+      align-items: center;
+      padding: 0 8px;
       border-radius: 999px;
-      background: var(--ink);
-      padding: 4px;
+      background: #e8fff5;
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 600;
     }
-    .switch::after { content: ""; display: block; width: 20px; height: 20px; border-radius: 50%; background: var(--cyan); margin-left: 20px; }
 
-    .state-board {
-      min-height: 620px;
+    .state-page {
+      min-height: 580px;
       display: grid;
       place-items: center;
       text-align: center;
-      padding: 34px;
+      padding: 80px 24px;
     }
 
-    .state-symbol {
-      width: 140px;
-      height: 140px;
-      margin: 0 auto 26px;
-      border-radius: 44px;
-      display: grid;
-      place-items: center;
-      color: white;
-      font: 900 56px/1 ui-sans-serif;
-      background: linear-gradient(135deg, var(--ink), #26566d);
-      box-shadow: 0 20px 50px rgba(15,27,45,.2);
-      transform: rotate(-7deg);
+    .state-code {
+      font-size: 84px;
+      line-height: 1;
+      color: #d9e7ff;
+      font-weight: 800;
     }
 
-    .state-board h2 { margin: 0; font-size: 52px; letter-spacing: -.07em; }
-    .state-board p { max-width: 520px; margin: 14px auto 28px; color: var(--muted); font: 15px/1.8 ui-sans-serif; }
+    .state-page h2 {
+      margin: 14px 0 10px;
+      font-size: 24px;
+    }
 
-    @media (max-width: 980px) {
-      .artboard { grid-template-columns: 1fr; }
-      .side { position: relative; min-height: auto; }
-      .nav { grid-template-columns: repeat(2, 1fr); }
-      .hero, .login-wrap, .profile-layout { grid-template-columns: 1fr; }
-      .grid-3, .grid-2 { grid-template-columns: 1fr; }
-      .topbar { height: auto; align-items: stretch; flex-direction: column; }
-      .search { max-width: none; }
-      .login-panel { padding: 30px; }
+    .state-page p {
+      max-width: 520px;
+      color: var(--text-3);
+      line-height: 1.8;
+      margin: 0 auto 24px;
+    }
+
+    @media (max-width: 1100px) {
+      .topnav { gap: 4px; }
+      .topnav button { padding: 0 10px; }
+      .home-layout, .login-page, .profile-top { grid-template-columns: 1fr; }
+      .login-card { margin: 0 24px 32px; }
+      .doc-list, .info-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .topbar { padding: 0 14px; }
+      .brand strong { display: none; }
+      .topnav { overflow-x: auto; max-width: 58vw; }
+      .userbar { min-width: auto; }
+      .body { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .content { padding: 10px; }
+      .home-layout { min-height: auto; }
+      .work-panel { min-height: calc(100vh - 88px); }
+      .suggestions { margin: 16px 0 0; overflow-x: auto; }
+      .composer { margin: 0 0 12px; }
     }
   </style>
 </head>
 <body>
-  <div class="canvas">
-    <div class="artboard">
-      <aside class="side" aria-label="主应用子应用导航">
-        <div class="brand">
-          <div class="mark">M</div>
-          <div>
-            <h1>MFEUI</h1>
-            <p>主应用统一登录设计稿</p>
-          </div>
-        </div>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <strong>企业智能知识库系统</strong>
+      </div>
 
-        <div class="nav-label">APPLICATIONS</div>
-        <nav class="nav">
-          <button class="active" data-view="home"><span class="icon">⌂</span><span>主应用首页</span></button>
-          <button data-view="login"><span class="icon">◉</span><span>主应用登录</span></button>
-          <button data-view="profile"><span class="icon">◌</span><span>用户中心</span></button>
-          <button data-view="state"><span class="icon">!</span><span>状态兜底</span></button>
+      <nav class="topnav" aria-label="主导航">
+        <button class="active" data-view="home">首页大盘</button>
+        <button>文档管理</button>
+        <button>智能搜索</button>
+        <button data-view="home">AI智能问答</button>
+        <button>知识图谱</button>
+        <button data-view="profile">个人中心</button>
+        <button>系统管理</button>
+      </nav>
+
+      <div class="userbar">
+        <div class="bell">♧</div>
+        <div class="user"><span class="avatar">张</span><span>张管理员⌄</span></div>
+      </div>
+    </header>
+
+    <div class="body">
+      <aside class="sidebar">
+        <h1 class="side-title">AI问答</h1>
+        <nav class="side-menu">
+          <button class="active" data-view="home"><span class="side-icon">☁</span>新建对话</button>
+          <button><span class="side-icon">◷</span>历史会话</button>
+          <button><span class="side-icon">▤</span>问答记录</button>
+          <button><span class="side-icon">◇</span>模型配置</button>
+          <button data-view="login"><span class="side-icon">◎</span>登录页面</button>
+          <button data-view="profile"><span class="side-icon">◉</span>用户中心</button>
+          <button data-view="state"><span class="side-icon">!</span>状态页面</button>
         </nav>
-
-        <div class="nav-label">RULE</div>
-        <div class="side-card">
-          <b>子应用在左侧菜单</b>
-          <span>左侧一级菜单用于子应用切换；登录页与公开页不展示复杂侧栏。</span>
-        </div>
       </aside>
 
-      <main class="main">
-        <header class="topbar">
-          <label class="search">
-            <span>⌕</span>
-            <input placeholder="搜索子应用、账号、安全设置" />
-          </label>
-          <div class="top-actions">
-            <div class="pill">消息 <b>3</b></div>
-            <div class="pill"><span class="avatar">ZZ</span> zhengzebiao</div>
-          </div>
-        </header>
-
+      <main class="content">
         <section class="view active" id="home">
-          <div class="hero">
-            <div class="panel hero-main">
-              <div class="eyebrow"><span class="dot"></span> MFE COMMAND SURFACE</div>
-              <h2>统一登录，清晰切换。</h2>
-              <p>主应用负责登录、导航和全局状态；子应用只消费登录态并专注业务。整体视觉采用深蓝指挥台和宣纸卡片，稳重但不沉闷。</p>
-              <div class="hero-actions">
-                <button class="btn btn-primary" data-jump="login">查看登录页</button>
-                <button class="btn btn-ghost" data-jump="profile">查看用户中心</button>
+          <div class="home-layout">
+            <aside class="card conversation-list">
+              <div class="card-head">
+                <h2>会话列表</h2>
+                <button class="icon-btn">☷</button>
               </div>
-            </div>
-            <div class="stat-stack">
-              <div class="metric"><small>LOGIN METHODS</small><strong>3</strong><span>邮箱 / 账号 / 微信</span></div>
-              <div class="metric"><small>AUTH OWNER</small><strong>主应用</strong><span>子应用不做独立登录</span></div>
-            </div>
-          </div>
+              <button class="outline-btn">＋ 新建对话</button>
 
-          <div class="section-title">
-            <h3>子应用入口</h3>
-            <span>左侧菜单承载子应用，首页提供快捷卡片</span>
-          </div>
-          <div class="grid-3">
-            <article class="card app-tile" data-jump="profile">
-              <div class="tile-icon">人</div>
-              <h3>用户中心</h3>
-              <p>账号信息、邮箱绑定、微信绑定、安全设置与登录记录。</p>
-            </article>
-            <article class="card app-tile">
-              <div class="tile-icon">锁</div>
-              <h3>登录能力</h3>
-              <p>邮箱登录、账号登录、微信扫码登录统一由主应用承接。</p>
-            </article>
-            <article class="card app-tile" data-jump="state">
-              <div class="tile-icon">态</div>
-              <h3>状态兜底</h3>
-              <p>403、会话过期、网络异常、系统异常统一体验。</p>
-            </article>
+              <div class="chat-item active">
+                <div class="chat-title"><strong>公司差旅报销政策是什么？</strong><span class="chat-time">10:30</span></div>
+                <div class="chat-desc">根据公司《差旅费用报销管理办法》，...</div>
+              </div>
+              <div class="chat-item">
+                <div class="chat-title"><span>如何申请系统权限？</span><span class="chat-time">昨天</span></div>
+                <div class="chat-desc">您可以通过以下步骤申请系统权限：...</div>
+              </div>
+              <div class="chat-item">
+                <div class="chat-title"><span>员工入职流程是怎样的？</span><span class="chat-time">昨天</span></div>
+                <div class="chat-desc">员工入职流程主要包括以下几个步骤：...</div>
+              </div>
+              <div class="chat-item">
+                <div class="chat-title"><span>项目管理规范有哪些？</span><span class="chat-time">05/20</span></div>
+                <div class="chat-desc">公司项目管理规范主要包括以下内容：...</div>
+              </div>
+              <div class="chat-item">
+                <div class="chat-title"><span>信息安全管理制度解读</span><span class="chat-time">05/19</span></div>
+                <div class="chat-desc">信息安全管理制度主要包括以下几个方...</div>
+              </div>
+              <div class="more-link">查看更多会话⌄</div>
+            </aside>
+
+            <section class="card work-panel">
+              <div class="work-title">
+                <h1>公司差旅报销政策是什么？</h1>
+                <button class="small-btn">♲ 清空对话</button>
+              </div>
+
+              <div class="workspace">
+                <div class="user-bubble">
+                  <div>
+                    <div class="bubble">公司差旅报销政策是什么？</div>
+                    <div class="bubble-time">10:30</div>
+                  </div>
+                  <span class="avatar">人</span>
+                </div>
+
+                <div class="answer">
+                  <div class="bot-avatar">☻</div>
+                  <div>
+                    <div class="answer-card">
+                      <p>根据公司《差旅费用报销管理办法》，差旅报销政策主要包括以下内容：</p>
+                      <ol>
+                        <li>适用范围：适用于公司所有因公出差的员工；</li>
+                        <li>报销标准：交通费按公司标准执行，住宿费按城市级别设定上限，餐饮费按每天不超过100元标准；</li>
+                        <li>报销流程：出差结束后5个工作日内提交报销申请，需附完整票据及出差审批单；</li>
+                        <li>票据要求：所有票据需真实有效，不得涂改，电子票据需打印并加盖公章；</li>
+                        <li>其他说明：特殊情况需超标准报销的，需提前申请并经部门负责人审批。</li>
+                      </ol>
+                      <p>具体细则请参考以下文档，如有疑问可联系财务部（内线：8123）。</p>
+                      <div class="docs">
+                        <div class="docs-title">引用文档（3）</div>
+                        <div class="doc-list">
+                          <div class="doc"><span class="doc-icon word">W</span><div class="doc-info"><div class="doc-name">差旅费用报销管理办法.docx</div><div class="doc-meta">08.5 KB ｜ 财务部 ｜ 2024-01-15</div></div></div>
+                          <div class="doc"><span class="doc-icon pdf">PDF</span><div class="doc-info"><div class="doc-name">差旅报销标准明细表.pdf</div><div class="doc-meta">156.7 KB ｜ 财务部 ｜ 2024-01-15</div></div></div>
+                          <div class="doc"><span class="doc-icon xls">X</span><div class="doc-info"><div class="doc-name">各城市住宿标准.xlsx</div><div class="doc-meta">23.4 KB ｜ 财务部 ｜ 2024-01-15</div></div></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="bubble-time" style="text-align:left">10:30</div>
+                  </div>
+                </div>
+
+                <div class="suggestions">
+                  <b>你可能还想问</b>
+                  <button>差旅报销需要哪些票据？</button>
+                  <button>报销申请提交后多久能到账？</button>
+                  <button>差旅报销的审批流程是怎样的？</button>
+                  <button>特殊情况如何申请超标准报销？</button>
+                  <button style="color: var(--primary); border:0">⟳ 换一批</button>
+                </div>
+              </div>
+
+              <div class="composer">
+                <input placeholder="请输入问题，Shift + Enter 换行" />
+                <div class="composer-actions"><span>0 / 2000</span><button class="secondary-btn">📎</button><button class="send">➤ 发送</button></div>
+              </div>
+            </section>
           </div>
         </section>
 
         <section class="view" id="login">
-          <div class="login-wrap">
-            <div class="login-art">
-              <div class="eyebrow"><span class="dot"></span> MAIN APP LOGIN</div>
-              <h2>登录只发生在主应用。</h2>
-              <p>子应用触发登录请求后，由主应用展示该页面；登录完成后回跳原访问路径，并将登录态广播给子应用。</p>
+          <div class="page-panel login-page">
+            <div class="login-hero">
+              <h2>主应用统一登录</h2>
+              <p>登录入口、登录回调、登录态恢复和退出登录统一由主应用承接。子应用只消费登录态，不独立处理邮箱、账号或微信登录。</p>
+              <div class="feature-list">
+                <div class="feature"><span class="check">✓</span>支持邮箱登录、账号登录、微信登录</div>
+                <div class="feature"><span class="check">✓</span>登录完成后自动回跳原页面</div>
+                <div class="feature"><span class="check">✓</span>所有子应用共享同一登录态</div>
+              </div>
             </div>
-            <div class="login-panel">
-              <h2>欢迎回来</h2>
-              <p>选择一种方式登录。继续即表示同意用户协议与隐私政策。</p>
-              <div class="tabs" role="tablist">
-                <button class="active" data-login="email">邮箱登录</button>
-                <button data-login="account">账号登录</button>
-                <button data-login="wechat">微信登录</button>
+
+            <div class="login-card">
+              <h2>登录系统</h2>
+              <p>请选择登录方式</p>
+              <div class="tabs">
+                <button class="active" data-login="email">邮箱</button>
+                <button data-login="account">账号</button>
+                <button data-login="wechat">微信</button>
               </div>
 
               <div class="login-form active" id="emailForm">
-                <label class="field"><span>✉</span><input placeholder="请输入邮箱" value="hello@example.com" /></label>
-                <label class="field"><span>✦</span><input placeholder="验证码" /><button class="send-code">获取验证码</button></label>
-                <button class="btn btn-dark">登录 / 自动注册</button>
+                <label class="field"><input placeholder="请输入邮箱" /></label>
+                <label class="field"><input placeholder="请输入验证码" /><button class="code-btn">获取验证码</button></label>
+                <button class="primary-btn">登录 / 注册</button>
                 <div class="agreement">未收到邮件？请检查垃圾箱，或 60 秒后重新发送。</div>
               </div>
 
               <div class="login-form" id="accountForm">
-                <label class="field"><span>◎</span><input placeholder="账号 / 邮箱" /></label>
-                <label class="field"><span>●</span><input placeholder="密码" type="password" /></label>
-                <button class="btn btn-dark">账号登录</button>
+                <label class="field"><input placeholder="请输入账号 / 邮箱" /></label>
+                <label class="field"><input placeholder="请输入密码" type="password" /></label>
+                <button class="primary-btn">账号登录</button>
                 <div class="agreement"><a href="#">忘记密码？</a> 可通过邮箱找回。</div>
               </div>
 
               <div class="login-form" id="wechatForm">
-                <div class="qr"><div class="qr-box" aria-label="微信二维码示意"></div></div>
-                <button class="btn btn-dark">刷新二维码</button>
-                <div class="agreement">请使用微信扫码登录。二维码 5 分钟内有效。</div>
+                <div class="qr"><div class="qr-box"></div></div>
+                <button class="primary-btn">刷新二维码</button>
+                <div class="agreement">请使用微信扫码登录，二维码 5 分钟内有效。</div>
               </div>
 
-              <p class="agreement">继续登录即表示同意 <a href="#">用户协议</a> 与 <a href="#">隐私政策</a>。</p>
+              <div class="agreement" style="margin-top:18px">继续登录即表示同意 <a href="#">用户协议</a> 与 <a href="#">隐私政策</a>。</div>
             </div>
           </div>
         </section>
 
         <section class="view" id="profile">
-          <div class="profile-layout">
-            <aside class="profile-card">
-              <div class="big-avatar">郑</div>
-              <h2>用户中心</h2>
-              <p>管理个人资料、登录身份、安全设置和偏好配置。该子应用消费主应用登录态。</p>
-              <div class="identity-row"><span>User ID</span><b>u_10001</b></div>
-              <div class="identity-row"><span>Role</span><b>普通用户</b></div>
-              <div class="identity-row"><span>Status</span><b>已登录</b></div>
-            </aside>
-
-            <div class="settings-grid">
-              <div class="card">
-                <h3>账号概览</h3>
-                <p>主应用同步的用户资料，子应用只读消费，不直接维护登录态。</p>
-                <div class="setting-item"><div><b>昵称</b><span>zhengzebiao</span></div><button class="btn btn-line">编辑</button></div>
-                <div class="setting-item"><div><b>邮箱</b><span>hello@example.com · 已验证</span></div><button class="btn btn-line">更换</button></div>
-                <div class="setting-item"><div><b>微信</b><span>已绑定 · 用于快捷登录</span></div><button class="btn btn-line">管理</button></div>
-              </div>
-
-              <div class="grid-2">
-                <div class="card">
-                  <h4>安全设置</h4>
-                  <p>登录失败保护、异常登录提醒、账号锁定策略。</p>
-                  <div class="setting-item"><div><b>异常登录提醒</b><span>开启后会通过邮箱通知</span></div><div class="switch"></div></div>
+          <div class="page-panel">
+            <div class="page-header">
+              <div><h1>个人中心</h1><p>管理个人资料、绑定方式、安全设置和偏好配置。</p></div>
+              <button class="secondary-btn">编辑资料</button>
+            </div>
+            <div class="profile-content">
+              <div class="profile-top">
+                <div class="card profile-card">
+                  <div class="profile-main">
+                    <div class="big-avatar">张</div>
+                    <div><h2>张管理员</h2><p>user_10001 · 普通管理员 · 已登录</p></div>
+                  </div>
+                  <div class="info-grid">
+                    <div class="info"><span>邮箱</span><b>admin@example.com</b></div>
+                    <div class="info"><span>微信</span><b>已绑定</b></div>
+                    <div class="info"><span>最近登录</span><b>10:30</b></div>
+                  </div>
                 </div>
-                <div class="card">
-                  <h4>偏好设置</h4>
-                  <p>语言、通知、隐私授权与数据采集提示。</p>
-                  <div class="setting-item"><div><b>行为数据采集</b><span>用于自建 BI 基础统计</span></div><div class="switch"></div></div>
+                <div class="card profile-card">
+                  <div class="setting-list">
+                    <div class="setting"><div><b>登录状态</b><span>由主应用统一维护</span></div><span class="tag">正常</span></div>
+                    <div class="setting"><div><b>会话同步</b><span>多子应用共享登录态</span></div><span class="tag">已开启</span></div>
+                    <div class="setting"><div><b>行为采集</b><span>用于自建 BI 基础统计</span></div><span class="tag">已开启</span></div>
+                  </div>
                 </div>
               </div>
 
-              <div class="card">
-                <h4>危险操作区</h4>
-                <p>注销账号、解绑身份、清理登录设备等操作需要二次确认。</p>
-                <button class="btn btn-danger">申请注销账号</button>
+              <div class="card profile-card">
+                <div class="setting-list">
+                  <div class="setting"><div><b>邮箱绑定</b><span>用于邮箱登录、找回密码和安全通知</span></div><button class="secondary-btn">更换</button></div>
+                  <div class="setting"><div><b>微信绑定</b><span>用于微信扫码快捷登录</span></div><button class="secondary-btn">管理</button></div>
+                  <div class="setting"><div><b>账号密码</b><span>用于后台和兜底登录方式</span></div><button class="secondary-btn">修改密码</button></div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         <section class="view" id="state">
-          <div class="panel state-board">
+          <div class="page-panel state-page">
             <div>
-              <div class="state-symbol">403</div>
+              <div class="state-code">403</div>
               <h2>当前账号暂无权限</h2>
               <p>你已登录，但没有访问该子应用或页面的权限。可以返回首页，或联系管理员开通对应权限。</p>
-              <button class="btn btn-primary" data-jump="home">返回主应用首页</button>
-              <button class="btn btn-line">联系管理员</button>
+              <button class="primary-btn" style="width:140px" data-view="home">返回首页</button>
+              <button class="secondary-btn">联系管理员</button>
             </div>
           </div>
         </section>
@@ -878,19 +1091,20 @@
   </div>
 
   <script>
-    const navButtons = [...document.querySelectorAll('.nav button')]
+    const viewButtons = [...document.querySelectorAll('[data-view]')]
     const views = [...document.querySelectorAll('.view')]
 
     function showView(id) {
-      navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.view === id))
       views.forEach(view => view.classList.toggle('active', view.id === id))
+      viewButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.view === id))
     }
 
-    navButtons.forEach(btn => btn.addEventListener('click', () => showView(btn.dataset.view)))
-    document.querySelectorAll('[data-jump]').forEach(el => el.addEventListener('click', () => showView(el.dataset.jump)))
+    viewButtons.forEach(btn => {
+      btn.addEventListener('click', () => showView(btn.dataset.view))
+    })
 
     const loginTabs = [...document.querySelectorAll('[data-login]')]
-    const forms = {
+    const loginForms = {
       email: document.querySelector('#emailForm'),
       account: document.querySelector('#accountForm'),
       wechat: document.querySelector('#wechatForm')
@@ -899,7 +1113,7 @@
     loginTabs.forEach(tab => {
       tab.addEventListener('click', () => {
         loginTabs.forEach(item => item.classList.toggle('active', item === tab))
-        Object.entries(forms).forEach(([key, form]) => form.classList.toggle('active', key === tab.dataset.login))
+        Object.entries(loginForms).forEach(([key, form]) => form.classList.toggle('active', key === tab.dataset.login))
       })
     })
   </script>

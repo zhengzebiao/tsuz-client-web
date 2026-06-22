@@ -74,21 +74,28 @@ Backend
 
 ### 4.1 前端
 
-- 框架：React 或 Vue，保持与 `tsu-cli` 模板一致。
+- 框架：React + TypeScript。
+- 包管理器：pnpm。
+- monorepo：采用 pnpm workspace + Turborepo。
 - 微前端：`qiankun`。
 - 状态管理：轻量全局状态 + 事件广播。
 - 路由：主应用统一路由控制，子应用独立路由子树。
 - 样式：CSS Modules / SCSS / UnoCSS / Tailwind 任选其一，统一规范即可。
-- 公共包：`auth-sdk`、`tracking-sdk`、`ads-sdk`、`config-sdk`、`shared-ui`、`shared-types`。
+- 公共包：`auth-sdk`、`tracking-sdk`、`config-sdk`、`shared-ui`、`shared-types`；`ads-sdk` 本阶段只做后续预留，不强制创建完整包。
+- 前端测试：Vitest。
+- E2E 测试：Playwright。
 
 ### 4.2 后端
 
-- 语言：Python。
+- 语言：Python 3.12。
 - Web 框架：FastAPI。
-- Auth Service：用户、登录、绑定、token、权限。
-- BFF/Gateway：统一对前端暴露用户态、权限、刷新、退出接口。
-- Event Collector：埋点采集接入层。
-- BI 存储：先保留原始事件层，再做主题层和看板层。
+- 依赖管理：uv。
+- 数据校验：Pydantic v2。
+- ORM：默认 SQLAlchemy 2.x。
+- 测试：pytest + httpx。
+- 第一阶段 A 服务形态：`backend-api` 单 FastAPI 服务，内部按 Auth / Users / Permissions / Events / Common 模块化。
+- 后续演进形态：再按需要拆分 Auth Service、BFF/Gateway、Event Collector、BI Query Service、Ads Service。
+- BI 存储：先保留链路和接口边界，再做原始事件层、主题层和看板层。
 
 ### 4.3 基础设施
 
@@ -107,22 +114,59 @@ Backend
 
 ### 阶段 1：主应用壳与账号体系
 
-#### 目标
+阶段 1 拆分为“阶段 1A：工程骨架与接口契约”和“阶段 1B：真实登录 MVP”。截至 2026-06-22，已确认先执行阶段 1A。
 
-先把“用户只在主应用登录”这件事做稳，建立可用的主应用壳、统一登录入口和最小账号体系。
+#### 阶段 1A：工程骨架与接口契约
 
-#### 工作项
+##### 目标
 
-1. 搭建主应用 Shell。
-2. 配置 qiankun 子应用加载。
-3. 落地主应用左侧菜单和顶部导航。
-4. 实现统一登录页入口。
-5. 实现邮箱登录、账号登录、微信登录三种方式的页面壳。
-6. 建立 Auth Service 最小可用接口。
-7. 实现登录态读取、登录后回跳、退出登录。
-8. 支持主应用统一广播登录态给子应用。
+建立可启动、可检查、可扩展的基础工程骨架，先把主应用壳、FastAPI 后端骨架、Alembic 骨架、Docker Compose test 和 GitHub Actions 基础检查搭起来。
 
-#### 交付结果
+##### 工作项
+
+1. 搭建 React + TypeScript 主应用 Shell。
+2. 配置 qiankun 子应用容器占位。
+3. 落地主应用左侧菜单、顶部导航和内容区骨架。
+4. 实现统一登录入口和登录页壳。
+5. 预留邮箱登录、账号登录、微信登录三种方式的页面占位。
+6. 建立 `services/backend-api` FastAPI 骨架。
+7. 建立 health / ready、Auth / Users / Permissions / Events 模块占位。
+8. 建立 Auth Bridge、Tracking SDK 和公共类型契约。
+9. 建立 PostgreSQL / Redis 配置入口和 Alembic 骨架。
+10. 建立 `docker-compose.test.yml`，包含 `main-web`、`backend-api`、`postgres`、`redis`。
+11. 建立 GitHub Actions CI、Docker build 和 test 部署占位。
+
+##### 交付结果
+
+- 主应用 Shell 可以启动并展示基础布局。
+- 登录页壳、用户中心入口或页面壳、403/404/500 兜底页可用。
+- 子应用可以通过契约读取或触发主应用登录能力，但没有真实登录闭环。
+- FastAPI 后端骨架、health / ready 和接口契约可用。
+- Alembic 骨架可用，但不创建真实业务表。
+- Docker Compose test 和 GitHub Actions 基础检查可用。
+
+##### 明确不做
+
+- 不实现真实邮箱、账号、微信登录闭环。
+- 不创建真实用户、identity、RBAC、事件等业务表。
+- 不创建 `ods_events_raw` 表。
+- 不 seed 默认管理员。
+- 不实现完整 BI 看板、广告接入或 product 自动部署。
+
+#### 阶段 1B：真实登录 MVP
+
+##### 目标
+
+在阶段 1A 骨架基础上，实现用户可以在主应用完成真实登录，并让子应用读取登录态。
+
+##### 工作项
+
+1. 实现邮箱登录、账号登录、微信登录。
+2. 实现登录态读取、登录后回跳、退出登录。
+3. 实现用户、identity、RBAC 基础表和 seed。
+4. 支持主应用统一广播登录态给子应用。
+
+##### 交付结果
 
 - 用户可以在主应用完成登录。
 - 子应用可以读取登录态。
@@ -416,23 +460,46 @@ P0 必须先落地：
 
 ## 7. 目录与工程建议
 
-### 7.1 前端目录
+### 7.1 第一阶段 A monorepo 目录
 
-建议公共能力抽成独立包：
+第一阶段 A 已确认采用 pnpm workspace + Turborepo，建议目录为：
 
 ```txt
+apps/
+  main-shell/
+
 packages/
   auth-sdk/
   tracking-sdk/
-  ads-sdk/
   shared-ui/
   shared-types/
   config-sdk/
+
+services/
+  backend-api/
 ```
 
-### 7.2 子应用目录
+`ads-sdk` 可在广告适配阶段再创建，第一阶段 A 不强制创建完整广告包。
 
-每个子应用建议保留：
+### 7.2 主应用目录
+
+主应用目录为 `apps/main-shell`，建议保留：
+
+```txt
+apps/main-shell/
+  src/
+    shell/
+    auth/
+    layout/
+    routes/
+    config/
+    shared/
+  tests/
+```
+
+### 7.3 子应用目录
+
+后续每个子应用建议保留：
 
 ```txt
 src/
@@ -443,18 +510,21 @@ src/
   app.tsx
 ```
 
-### 7.3 主应用目录
+### 7.4 后端目录
 
-主应用建议保留：
+第一阶段 A 后端目录为 `services/backend-api`，内部按模块化预留：
 
 ```txt
-src/
-  shell/
-  auth/
-  layout/
-  routes/
-  config/
-  shared/
+services/backend-api/
+  app/
+    auth/
+    users/
+    permissions/
+    events/
+    common/
+    db/
+  alembic/
+  tests/
 ```
 
 ---
@@ -505,6 +575,23 @@ src/
 ---
 
 ## 10. 验收标准
+
+### 10.1 阶段 1A 验收标准
+
+1. 主应用 Shell 可以启动，顶部导航、左侧菜单、内容区可见。
+2. 登录入口和登录页壳只存在于主应用。
+3. 邮箱、账号、微信三种登录方式有 UI 占位，但不要求真实登录可用。
+4. 403 / 404 / 500 页面可兜底。
+5. Auth Bridge 契约存在，且不暴露 refresh token。
+6. Tracking SDK 契约存在，采集失败不影响主流程。
+7. FastAPI `backend-api` 骨架可启动。
+8. health / ready 接口可用于 Docker 和 CI 检查。
+9. Alembic 骨架存在，但不要求创建真实业务表。
+10. `docker-compose.test.yml` 可拉起 `main-web`、`backend-api`、`postgres`、`redis`。
+11. GitHub Actions 能执行基础 CI、Docker build，并预留 test 部署。
+12. product 发布不因 push 自动触发。
+
+### 10.2 完整 MVP 验收标准
 
 1. 用户只能在主应用完成登录。
 2. 子应用之间登录态共享且不重复登录。

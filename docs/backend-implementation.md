@@ -46,11 +46,38 @@
 
 #### 技术栈
 
-- 后端语言：Python。
+- 后端语言：Python 3.12。
 - 后端框架：FastAPI。
+- 依赖管理：uv。
+- 数据校验：Pydantic v2。
+- ORM：默认 SQLAlchemy 2.x。
+- 后端测试：pytest + httpx。
 - 主数据库：PostgreSQL。
 - 数据库迁移：Alembic。
 - 基础数据初始化：seed 脚本。
+
+#### 第一阶段 A 已确认后端口径
+
+第一阶段 A 只搭建 `services/backend-api` 的 FastAPI 工程骨架和接口契约。
+
+本阶段做：
+
+- FastAPI app 启动骨架。
+- 配置加载。
+- health / ready 接口。
+- Auth / Users / Permissions / Events / Common 模块占位。
+- Auth API 契约占位。
+- PostgreSQL / Redis 配置入口。
+- Alembic 骨架。
+- pytest + httpx 基础测试。
+
+本阶段不做：
+
+- 不实现真实邮箱、账号、微信登录闭环。
+- 不创建真实用户、identity、RBAC、事件等业务表。
+- 不创建 `ods_events_raw` 表。
+- 不 seed 默认管理员。
+- 不实现完整 Event Collector、BI Query Service、Ads Service。
 
 身份类型：
 
@@ -120,6 +147,8 @@ seed 脚本必须满足：
 - 不产生重复数据。
 - 不覆盖生产环境已有业务数据。
 - product 环境只写入稳定基础数据。
+
+第一阶段 A 已确认先跳过默认管理员 seed；本阶段只预留 seed 后续入口和幂等原则，不写入真实默认管理员、测试用户或业务基础数据。
 
 ---
 
@@ -228,19 +257,44 @@ billing.order.create
 
 ## 9. 目录建议
 
+第一阶段 A 后端目录为 `services/backend-api`：
+
 ```txt
-src/
-  auth/
-  permissions/
-  events/
-  ads/
-  users/
-  common/
+services/backend-api/
+  app/
+    auth/
+    permissions/
+    events/
+    users/
+    common/
+    db/
+  alembic/
+  tests/
+  pyproject.toml
+  Dockerfile
 ```
+
+第一阶段 A 不创建独立 Auth Service、BFF/Gateway、Event Collector、BI Query Service、Ads Service 目录；这些能力先在 `backend-api` 内部模块化预留。
 
 ---
 
 ## 10. 验收标准
+
+### 10.1 阶段 1A 验收标准
+
+1. `services/backend-api` FastAPI 应用可启动。
+2. Python 3.12 + uv + FastAPI + Pydantic v2 基础工程可用。
+3. pytest + httpx 基础测试可运行。
+4. health / ready 接口可用于 Docker 和 CI 检查。
+5. Auth / Users / Permissions / Events / Common 模块占位清晰。
+6. Auth API 契约存在，但不要求真实登录可用。
+7. PostgreSQL / Redis 配置入口存在。
+8. Alembic 骨架存在，但不创建真实业务表。
+9. 不创建 `ods_events_raw` 表。
+10. 不 seed 默认管理员。
+11. 后端默认保留真实鉴权职责，前端权限不得作为唯一安全边界。
+
+### 10.2 完整 MVP 验收标准
 
 1. 邮箱、账号、微信登录可用。
 2. `/me`、`/permissions`、`/refresh`、`/logout` 可用。

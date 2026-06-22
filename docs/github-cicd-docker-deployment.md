@@ -30,6 +30,38 @@ GitHub 仓库 + GitHub Actions CI/CD + Docker 镜像 + test/product 双环境部
 4. 前端、后端、埋点服务、BI 查询服务全部容器化。
 5. test 和 product 使用独立配置、独立密钥、独立数据库或 schema。
 
+### 2.1 第一阶段 A 已确认 DevOps 口径
+
+第一阶段 A 只做工程骨架相关的 CI、Docker build 和 test 部署占位。
+
+已确认：
+
+- 包管理器：pnpm。
+- monorepo 工具：Turborepo。
+- 后端依赖管理：uv。
+- Docker Compose test 文件：`docker-compose.test.yml`。
+- test 环境 PostgreSQL / Redis 由 Compose 内容器提供。
+- Docker 镜像仓库：GHCR。
+- GitHub Actions：CI + Docker build + test 部署占位。
+- product 发布：本阶段不实现自动部署，只保留 GitHub Release、tag 或 manual approval 原则。
+
+第一阶段 A Compose 最小服务：
+
+```txt
+services:
+  main-web
+  backend-api
+  postgres
+  redis
+```
+
+第一阶段 A 不做：
+
+- 不做 product 自动部署。
+- 不接入 product secrets。
+- 不执行 product migration / seed。
+- 不创建完整 Event Collector、BI Query Service、Ads Service 独立容器。
+
 ---
 
 ## 3. 环境划分
@@ -238,7 +270,17 @@ GHCR_TOKEN
 
 ### 8.1 test 环境
 
-建议使用 `docker-compose.test.yml`：
+第一阶段 A 使用 `docker-compose.test.yml` 的最小服务：
+
+```txt
+services:
+  main-web
+  backend-api
+  postgres
+  redis
+```
+
+完整 MVP 或后续阶段可扩展为：
 
 ```txt
 services:
@@ -316,12 +358,14 @@ services:
 
 ### 10.3 健康检查
 
-每个服务建议提供：
+第一阶段 A 的 `backend-api` 建议提供：
 
 ```txt
-GET /health
-GET /ready
+GET /api/health/live
+GET /api/health/ready
 ```
+
+后续拆分多个服务时，每个服务都应提供等价 health / ready 接口；如部署平台需要，也可以额外保留 `/health`、`/ready` 别名。
 
 ---
 
@@ -476,6 +520,19 @@ MVP 阶段至少准备：
 ---
 
 ## 16. 验收标准
+
+### 16.1 阶段 1A 验收标准
+
+1. GitHub Actions 能执行基础 CI。
+2. GitHub Actions 能执行 Docker build。
+3. test 部署 workflow 有占位，但不要求真实远程部署可用。
+4. `docker-compose.test.yml` 可拉起 `main-web`、`backend-api`、`postgres`、`redis`。
+5. test PostgreSQL / Redis 由 Compose 内容器提供。
+6. Docker 镜像仓库按 GHCR 预留。
+7. test 和 product 配置命名隔离。
+8. product 发布不因 push 自动触发，本阶段不接入 product secrets。
+
+### 16.2 完整部署验收标准
 
 1. push 到 test 分支后能自动部署 test 环境。
 2. product 发布通过 release/tag 或审批流程触发。

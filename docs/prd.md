@@ -640,6 +640,46 @@ visitorId -> login_success -> userId
 
 ## 8. MVP 范围建议
 
+### 8.0 第一阶段 A：工程骨架与接口契约
+
+截至 2026-06-22，已确认先执行“第一阶段 A”，用于建立工程骨架、接口契约和 test 环境基础链路。该阶段不等同于完整 MVP，也不要求真实登录、BI 看板或广告接入可用。
+
+已确认技术与范围：
+
+- 前端：React + TypeScript。
+- 包管理器：pnpm。
+- monorepo：pnpm workspace + Turborepo。
+- 主应用目录：`apps/main-shell`。
+- 后端目录：`services/backend-api`。
+- 后端：Python 3.12 + FastAPI + uv + Pydantic v2，ORM 默认 SQLAlchemy 2.x。
+- 测试：前端 Vitest，E2E Playwright，后端 pytest + httpx。
+- Docker Compose test 文件：`docker-compose.test.yml`。
+- test 环境 PostgreSQL / Redis：由 Compose 内容器提供。
+- Docker 镜像仓库：GHCR。
+- GitHub Actions：CI + Docker build + test 部署占位。
+- product 发布：本阶段不实现自动部署，只保留 GitHub Release、tag 或 manual approval 原则。
+
+第一阶段 A 只交付：
+
+1. 主应用 Shell、qiankun 容器占位、顶部导航、左侧菜单、内容区。
+2. 登录入口和登录页壳，包含邮箱、账号、微信三种方式的 UI 占位。
+3. 403 / 404 / 500 页面。
+4. Auth Bridge、Tracking SDK 和公共类型契约。
+5. `services/backend-api` FastAPI 骨架、health / ready、Auth / Users / Permissions / Events 模块占位。
+6. Auth API 和 Event API 契约占位。
+7. PostgreSQL / Redis 配置入口和 Alembic 骨架。
+8. Docker Compose test 最小服务：`main-web`、`backend-api`、`postgres`、`redis`。
+9. GitHub Actions 基础 CI、Docker build 和 test 部署占位。
+
+第一阶段 A 明确不交付：
+
+- 不实现真实邮箱、账号、微信登录闭环。
+- 不创建真实用户、identity、RBAC、事件等业务表。
+- 不创建 `ods_events_raw` 表。
+- 不 seed 默认管理员。
+- 不实现完整 BI 分层、BI 看板和广告接入。
+- 不做 product 自动部署。
+
 ### 8.1 P0 必须实现
 
 1. 主应用统一登录入口。
@@ -945,6 +985,18 @@ interface AdsSDK {
 
 | 问题 | 结论 | 说明 |
 | --- | --- | --- |
+| 第一阶段 A 范围 | 工程骨架与接口契约 | 只搭建基础工程、页面壳、接口契约、Alembic 骨架、Docker Compose test 和 CI；不实现真实登录、不建业务表、不 seed 默认管理员、不做 product 自动部署 |
+| 前端框架 | React + TypeScript | 主应用 Shell 第一阶段使用 React + TS |
+| 包管理器 | pnpm | monorepo 包管理统一使用 pnpm |
+| monorepo 工具 | Turborepo | 目录采用 `apps/`、`packages/`、`services/` 分层 |
+| 主应用目录 | `apps/main-shell` | 承接 qiankun、导航、登录页壳、状态页和 SDK 初始化 |
+| 后端目录 | `services/backend-api` | 第一阶段采用单 FastAPI 服务，内部模块化 |
+| 后端依赖管理 | uv | Python 版本使用 3.12 |
+| 后端技术栈补充 | Pydantic v2 + SQLAlchemy 2.x | SQLAlchemy 2.x 为默认 ORM 选择 |
+| 测试框架 | Vitest / Playwright / pytest + httpx | 前端单测、E2E、后端接口测试分别使用这些工具 |
+| Compose test | `docker-compose.test.yml` | test PostgreSQL / Redis 由 Compose 内容器提供 |
+| Docker 镜像仓库 | GHCR | 第一阶段 CI / Docker build 按 GHCR 预留 |
+| product 发布 | 暂不自动部署 | 只保留 GitHub Release、tag 或 manual approval 原则 |
 | 首期目标用户 | 国内 | 登录方式与合规策略按国内场景优先设计 |
 | 微前端框架 | qiankun | 主应用统一承接登录态与权限控制 |
 | 现有账号体系 | 没有 | 需要从头建设统一认证与用户体系 |

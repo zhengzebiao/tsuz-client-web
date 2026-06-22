@@ -22,6 +22,38 @@
 - 接入埋点 SDK、广告适配层和基础异常兜底页面。
 - 形成可复用的公共包和统一 UI 体系。
 
+### 2.1 第一阶段 A 已确认前端口径
+
+第一阶段 A 只做“工程骨架与接口契约”，前端不实现真实登录闭环。
+
+已确认：
+
+- 前端框架：React + TypeScript。
+- 包管理器：pnpm。
+- monorepo：pnpm workspace + Turborepo。
+- 主应用目录：`apps/main-shell`。
+- 前端测试框架：Vitest。
+- E2E 测试框架：Playwright。
+
+第一阶段 A 前端只交付：
+
+- 主应用 Shell。
+- qiankun 子应用容器占位。
+- 顶部导航、左侧菜单、内容区。
+- 登录入口和登录页壳。
+- 邮箱登录、账号登录、微信登录三种方式的 UI 占位。
+- 403 / 404 / 500 页面。
+- Auth Bridge 契约占位。
+- Tracking SDK 契约占位。
+
+第一阶段 A 不交付：
+
+- 不实现真实邮箱、账号、微信登录提交。
+- 不实现真实 token 刷新。
+- 不保存 refresh token。
+- 不实现真实用户中心业务功能，只保留入口或页面壳。
+- 不接入真实腾讯/百度广告 SDK。
+
 ---
 
 ## 3. 前端架构
@@ -176,6 +208,18 @@ export const appMeta = {
 
 ## 7. 页面实现优先级
 
+### 阶段 1A
+
+- 主应用壳。
+- qiankun 容器占位。
+- 登录入口和登录页壳。
+- 邮箱、账号、微信三种登录方式的 UI 占位。
+- 用户中心入口或页面壳。
+- 403 / 404 / 500 页面。
+- 基础菜单切换。
+- Auth Bridge 契约。
+- Tracking SDK 契约。
+
 ### P0
 
 - 主应用壳。
@@ -183,6 +227,7 @@ export const appMeta = {
 - 用户中心。
 - 403 / 404 / 500 页面。
 - 基础菜单切换。
+- 登录态初始化、登录后回跳、退出登录。
 
 ### P1
 
@@ -201,20 +246,52 @@ export const appMeta = {
 
 ## 8. 目录建议
 
+第一阶段 A 采用 monorepo，主应用目录为 `apps/main-shell`：
+
 ```txt
-src/
-  shell/
-  auth/
-  layout/
-  routes/
-  pages/
-  components/
-  shared/
+apps/main-shell/
+  src/
+    shell/
+    auth/
+    layout/
+    routes/
+    pages/
+    components/
+    shared/
+  tests/
 ```
+
+公共包目录建议：
+
+```txt
+packages/
+  auth-sdk/
+  tracking-sdk/
+  shared-ui/
+  shared-types/
+  config-sdk/
+```
+
+`ads-sdk` 可后续按广告接入阶段再创建，第一阶段 A 不强制创建完整广告包。
 
 ---
 
 ## 9. 验收标准
+
+### 9.1 阶段 1A 验收标准
+
+1. `apps/main-shell` 主应用能启动。
+2. 顶部导航、左侧菜单、内容区正常显示。
+3. qiankun 子应用容器有占位和加载失败兜底。
+4. 登录入口和登录页壳只存在于主应用。
+5. 邮箱、账号、微信三种登录方式有 UI 占位，但不要求真实提交可用。
+6. 403 / 404 / 500 正常显示。
+7. Auth Bridge 契约存在，子应用只能通过 `requireLogin()` 触发主应用登录。
+8. Tracking SDK 契约存在，调用失败不影响主流程。
+9. 不保存 refresh token，不处理微信 callback。
+10. Vitest 基础测试可运行，Playwright E2E 目录或配置可预留。
+
+### 9.2 完整 MVP 验收标准
 
 1. 主应用能统一登录。
 2. 子应用能读取登录态。

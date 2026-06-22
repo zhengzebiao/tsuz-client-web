@@ -251,7 +251,30 @@
 
 ## 6. 最小起步配置
 
-如果想先快速启动，建议至少先准备以下资源：
+### 6.1 第一阶段 A 最小起步配置
+
+第一阶段 A 只做工程骨架与接口契约，最小资源准备为：
+
+1. GitHub 仓库与 GitHub Actions 权限。
+2. GHCR 或等价 Docker 镜像仓库权限。
+3. 本地 / test Docker 运行环境。
+4. `docker-compose.test.yml` 内 PostgreSQL 容器。
+5. `docker-compose.test.yml` 内 Redis 容器。
+6. test 环境变量模板，不提交真实 secret。
+7. 如需要预留 test 部署，占位准备 test 服务器、SSH key、部署用户，但本阶段不要求真实部署可用。
+
+第一阶段 A 暂不要求：
+
+- product 服务器。
+- product PostgreSQL / Redis 接入。
+- 邮件服务商真实开通。
+- 微信开放平台真实开通。
+- BI 看板资源。
+- 腾讯 / 百度广告资源。
+
+### 6.2 完整 MVP 最小起步配置
+
+如果想先快速启动完整 MVP，建议至少先准备以下资源：
 
 1. 主域名、API 域名、HTTPS 证书。
 2. 前端静态托管。

@@ -18,6 +18,39 @@
 - 部署区分 test 和 product 环境。
 - 前端、后端、Event Collector、BI 查询服务采用 Docker 容器部署。
 
+## 第一阶段 A 已确认口径
+
+第一阶段 A 定位为“工程骨架与接口契约”，只搭建可启动、可检查、可扩展的基础工程，不实现完整业务闭环。
+
+已确认技术与范围：
+
+- 前端使用 React + TypeScript。
+- 包管理器使用 pnpm。
+- 采用 monorepo，monorepo 工具使用 Turborepo。
+- 主应用目录使用 `apps/main-shell`。
+- 后端目录使用 `services/backend-api`。
+- 后端依赖管理使用 `uv`。
+- Python 版本使用 3.12。
+- 后端数据校验使用 Pydantic v2。
+- ORM 默认使用 SQLAlchemy 2.x。
+- 前端测试框架使用 Vitest。
+- E2E 测试框架使用 Playwright。
+- 后端测试框架使用 pytest + httpx。
+- Docker Compose test 文件使用 `docker-compose.test.yml`。
+- test 环境 PostgreSQL / Redis 由 Compose 内容器提供。
+- Docker 镜像仓库使用 GHCR。
+- GitHub Actions 第一阶段做 CI、Docker build，并预留 test 部署占位。
+- product 发布本阶段不实现自动部署，只保留 GitHub Release、tag 或 manual approval 原则。
+
+第一阶段 A 明确不做：
+
+- 不实现真实邮箱、账号、微信登录闭环，只做登录页面壳和接口契约。
+- 不创建真实用户、identity、RBAC、事件等业务表，只做 Alembic 骨架。
+- 不创建 `ods_events_raw` 表。
+- 不 seed 默认管理员。
+- 不做完整 BI 分层、BI 看板和广告接入。
+- 不做 product 自动部署。
+
 ## 关键文档
 
 优先参考以下文档：

@@ -22,6 +22,26 @@
 - 支持登录转化、活跃、留存、子应用访问、广告曝光/点击统计。
 - 为后续分群、归因、权限分析和广告收益分析留基础。
 
+### 2.1 第一阶段 A 已确认数据口径
+
+第一阶段 A 只做 Tracking / Event Collector / BI 的工程边界预留，不实现完整数据链路。
+
+本阶段做：
+
+- 在主应用和公共包中预留 Tracking SDK 契约。
+- 预留 P0 事件字典和公共字段类型。
+- 保留 `visitorId`、`sessionId`、`userId` 的关联能力设计。
+- 在 `backend-api` 中预留 Events 模块和 `/api/events/collect`、`/api/events/schema` 接口契约。
+- Docker Compose test 中提供后续事件链路依赖的 PostgreSQL / Redis 基础服务。
+
+本阶段不做：
+
+- 不创建 `ods_events_raw` 表。
+- 不实现事件真实入库。
+- 不实现 DWD / DWS / ADS 分层。
+- 不实现 BI 看板。
+- 不接入真实广告数据回传。
+
 ---
 
 ## 3. 数据架构
@@ -152,7 +172,23 @@ tracking.identify(userId, traits)
 
 ## 7. BI 落地方式
 
-### 7.1 MVP
+### 7.1 阶段 1A
+
+先做工程边界预留：
+
+- Tracking SDK 契约。
+- P0 事件字典和公共字段类型。
+- Event API 契约。
+- `visitorId`、`sessionId`、`userId` 关联能力设计。
+
+阶段 1A 不做：
+
+- 不创建 `ods_events_raw` 表。
+- 不实现原始事件入库。
+- 不实现 BI 看板。
+- 不实现广告基础统计。
+
+### 7.2 MVP
 
 先做：
 
@@ -162,7 +198,7 @@ tracking.identify(userId, traits)
 - 子应用访问排行。
 - 广告基础统计。
 
-### 7.2 中期
+### 7.3 中期
 
 - 用户主题表。
 - 会话主题表。
@@ -170,7 +206,7 @@ tracking.identify(userId, traits)
 - 子应用主题表。
 - 广告位主题表。
 
-### 7.3 后期
+### 7.4 后期
 
 - 用户分群。
 - 漏斗分析。
@@ -216,6 +252,16 @@ tracking.identify(userId, traits)
 ---
 
 ## 10. 验收标准
+
+### 10.1 阶段 1A 验收标准
+
+1. Tracking SDK 契约和 P0 事件类型已预留。
+2. `visitorId`、`sessionId`、`userId` 关联能力在类型和接口中有设计位置。
+3. `/api/events/collect` 和 `/api/events/schema` 接口契约已预留。
+4. 采集失败不影响主流程的原则已体现在契约中。
+5. 不创建 `ods_events_raw` 表，不实现真实事件入库和 BI 看板。
+
+### 10.2 完整 MVP 验收标准
 
 1. 事件可稳定上报。
 2. 登录前后可通过 visitorId/userId 关联。

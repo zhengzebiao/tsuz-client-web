@@ -565,7 +565,36 @@ Reviewer Agent 和人工 review 需要检查：
 - Docker Compose 结构。
 - 数据库连接配置方式。
 
-未确认前，Agent 只能输出任务拆分、方案、文件范围和待确认问题，不应擅自生成工程代码。
+截至 2026-06-22，第一阶段 A 已确认：
+
+- 前端框架：React + TypeScript。
+- 包管理器：pnpm。
+- monorepo：是，使用 Turborepo。
+- 前端目录：`apps/main-shell`。
+- 后端目录：`services/backend-api`。
+- 后端依赖管理：uv。
+- Python 版本：3.12。
+- 数据校验：Pydantic v2。
+- ORM：默认 SQLAlchemy 2.x。
+- 前端测试框架：Vitest。
+- E2E 测试框架：Playwright。
+- 后端测试框架：pytest + httpx。
+- Docker Compose test 文件：`docker-compose.test.yml`。
+- test PostgreSQL / Redis：由 Compose 内容器提供。
+- Docker 镜像仓库：GHCR。
+- GitHub Actions：CI + Docker build + test 部署占位。
+- product 发布：本阶段不实现自动部署，只保留 GitHub Release、tag 或 manual approval 原则。
+
+第一阶段 A 范围限制：
+
+- 只做工程骨架与接口契约。
+- 登录只做页面壳和接口契约，不实现真实登录闭环。
+- 只做 Alembic 骨架，不创建真实业务表。
+- 不创建 `ods_events_raw` 表。
+- 不 seed 默认管理员。
+- 不做完整 BI 看板、广告接入和 product 自动部署。
+
+未确认新范围前，Agent 不应超出以上边界生成工程代码。
 
 ### 13.4 Workflow 使用说明
 

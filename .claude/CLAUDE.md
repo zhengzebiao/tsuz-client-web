@@ -32,6 +32,7 @@
 - [login-method-preparation.md](../docs/login-method-preparation.md)：邮箱、账号、微信登录准备清单。
 - [rbac-resource-permission.md](../docs/rbac-resource-permission.md)：RBAC + 资源权限扩展说明。
 - [mfeui-design-reference.md](../docs/mfeui-design-reference.md)：MFE UI 设计参考。
+- [multi-agent-auto-development.md](../docs/multi-agent-auto-development.md)：多 Agent 自动开发方案。
 
 ## 架构约束
 
@@ -117,3 +118,6 @@ UI 风格参考 [mfeui-ui-design.html](../mfeui-ui-design.html)：
 - 新增重要约束时，同步检查 `docs/technical-execution-plan.md`、对应实施文档和资源清单。
 - 若涉及部署、环境、数据库、后端语言、登录方式变更，必须同步更新本文件。
 - 当前项目以方案设计为主；如开始生成代码，需先确认技术栈、目录结构和目标框架。
+- 多 Agent 自动开发优先使用 `/agent-plan` 进行任务拆分，或使用 `/auto-dev` 进行“先规划、再确认、后执行、再审查”的编排。
+- 多 Agent 产出必须经 `tsuz-reviewer` 汇总审查，检查是否符合本文件和关键方案文档约束。
+- 当前仓库无完整工程代码时，任何自动开发流程不得擅自创建前后端工程；必须先确认前端框架、目录结构、包管理器、后端目录、测试框架和部署结构。

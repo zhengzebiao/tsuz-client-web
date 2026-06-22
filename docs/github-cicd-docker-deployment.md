@@ -304,8 +304,7 @@ services:
 
 后端服务统一使用 Python：
 
-- FastAPI 推荐使用 `uvicorn` 或 `gunicorn + uvicorn worker`。
-- Django REST Framework 推荐使用 `gunicorn`。
+- FastAPI 服务推荐使用 `uvicorn` 或 `gunicorn + uvicorn worker`。
 
 ### 10.2 需要容器化的 Python 服务
 
@@ -339,22 +338,56 @@ test 和 product 使用独立 PostgreSQL 数据库。
 
 ### 11.2 数据库迁移
 
-Python 项目可选：
-
-- Alembic。
-- Django migration。
+数据库迁移工具统一使用 **Alembic**。
 
 部署前需要执行迁移：
 
 ```txt
-构建镜像 -> 部署前迁移 -> 启动服务 -> 健康检查
+构建镜像 -> 执行 Alembic 迁移 -> 启动服务 -> 健康检查
+```
+
+推荐迁移命令：
+
+```bash
+alembic upgrade head
 ```
 
 product 环境迁移需要谨慎：
 
-- 先备份。
-- 支持回滚。
-- 避免破坏性变更。
+- 发布前先备份 PostgreSQL。
+- migration 文件必须进入代码评审。
+- 禁止直接在生产数据库手工改表。
+- 避免破坏性变更，例如直接删除字段、删除表、修改字段类型。
+- 必要时使用“新增字段 -> 双写/兼容 -> 数据迁移 -> 下线旧字段”的渐进式变更。
+
+### 11.3 Seed 初始化脚本
+
+数据库结构初始化与结构变更统一使用 Alembic；默认角色、默认权限、默认管理员、系统基础配置使用 seed 脚本初始化。
+
+seed 脚本用于向空库或新环境写入基础数据，例如：
+
+- 默认管理员账号。
+- 默认角色。
+- 默认权限点。
+- 默认登录方式配置。
+- 默认菜单配置。
+- test 环境测试用户。
+- test 环境测试广告位。
+
+seed 脚本必须具备幂等性：允许重复执行，但不能产生重复数据。
+
+推荐流程：
+
+```txt
+构建镜像 -> 执行 Alembic 迁移 -> 执行 seed 脚本 -> 启动服务 -> 健康检查
+```
+
+product 环境执行 seed 需要谨慎：
+
+- 只允许写入稳定的系统基础数据。
+- 不要通过 seed 写入临时运营数据。
+- 默认管理员账号必须要求首次登录后修改密码。
+- seed 脚本必须进入代码评审。
 
 ---
 

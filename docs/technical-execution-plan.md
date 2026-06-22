@@ -84,7 +84,7 @@ Backend
 ### 4.2 后端
 
 - 语言：Python。
-- Web 框架：FastAPI 或 Django REST Framework，优先保持轻量和接口清晰。
+- Web 框架：FastAPI。
 - Auth Service：用户、登录、绑定、token、权限。
 - BFF/Gateway：统一对前端暴露用户态、权限、刷新、退出接口。
 - Event Collector：埋点采集接入层。

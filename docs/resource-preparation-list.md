@@ -99,7 +99,7 @@
 #### 后端语言建议
 
 - 后端统一使用 Python。
-- 建议优先选择 FastAPI 实现接口层；如果团队更熟悉 Django，也可以用 Django REST Framework。
+- 后端框架统一使用 FastAPI 实现接口层。
 - 认证、权限、埋点、BI 接口尽量保持清晰分层。
 
 #### 需要部署的能力

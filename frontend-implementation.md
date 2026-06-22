@@ -7,7 +7,7 @@
 | 文档名称 | 前端实施方案 |
 | 适用范围 | 使用 `tsu-cli` 工具模板生成的 MFE 微前端项目 |
 | 依据文档 | [prd.md](prd.md) / [technical-execution-plan.md](technical-execution-plan.md) |
-| 当前前提 | 主应用统一登录、qiankun、邮箱登录/账号登录/微信登录、自建 BI |
+| 当前前提 | 主应用统一登录、qiankun、邮箱登录/账号登录/微信登录、自建 BI、GitHub CI/CD、Docker 容器部署、test/product 双环境 |
 | 文档版本 | v0.1 |
 | 日期 | 2026-06-22 |
 | 目标读者 | 前端、UI、架构、测试 |

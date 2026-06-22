@@ -7,7 +7,7 @@
 | 文档名称 | 后端实施方案 |
 | 适用范围 | 使用 `tsu-cli` 工具模板生成的 MFE 微前端项目 |
 | 依据文档 | [prd.md](prd.md) / [technical-execution-plan.md](technical-execution-plan.md) |
-| 当前前提 | 主应用统一登录、邮箱登录/账号登录/微信登录、自建 BI、广告接入腾讯/百度 |
+| 当前前提 | 主应用统一登录、邮箱登录/账号登录/微信登录、自建 BI、广告接入腾讯/百度、Python、PostgreSQL、GitHub CI/CD、Docker 容器部署、test/product 双环境 |
 | 文档版本 | v0.1 |
 | 日期 | 2026-06-22 |
 | 目标读者 | 后端、架构、安全、测试 |
@@ -21,6 +21,8 @@
 - 提供埋点接收和事件流转能力。
 - 为广告配置、广告回传和归因提供接口。
 - 为前端提供稳定 BFF/Gateway 支撑。
+- 后端语言统一使用 Python。
+- 主数据库统一使用 PostgreSQL。
 
 ---
 
@@ -41,6 +43,12 @@
 ### 4.1 账号体系
 
 建议使用内部 `userId` 作为主键，邮箱、账号、微信作为身份绑定项。
+
+#### 技术栈
+
+- 后端语言：Python。
+- 推荐框架：FastAPI 或 Django REST Framework。
+- 主数据库：PostgreSQL。
 
 身份类型：
 

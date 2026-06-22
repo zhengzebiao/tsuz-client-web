@@ -83,6 +83,8 @@ Backend
 
 ### 4.2 后端
 
+- 语言：Python。
+- Web 框架：FastAPI 或 Django REST Framework，优先保持轻量和接口清晰。
 - Auth Service：用户、登录、绑定、token、权限。
 - BFF/Gateway：统一对前端暴露用户态、权限、刷新、退出接口。
 - Event Collector：埋点采集接入层。
@@ -95,6 +97,9 @@ Backend
 - 日志采集与审计。
 - 监控与告警。
 - 对象存储或数据库用于事件与原始数据。
+- CI/CD：使用 GitHub Actions。
+- 环境：区分 test 和 product 两套环境。
+- 部署方式：前端、后端、Event Collector、BI 查询服务均采用 Docker 容器部署。
 
 ---
 
